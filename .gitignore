@@ -1,0 +1,5 @@
+# Ignore all binaries and non-source
+bin
+obj
+obj/**
+wwwroot
