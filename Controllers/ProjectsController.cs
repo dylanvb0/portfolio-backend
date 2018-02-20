@@ -27,12 +27,12 @@ namespace portfolio_backend.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post(string namespce, [FromBody]Project value)
+        public long Post(string namespce, [FromBody]Project value)
         {
           if(value.Id <= 0){
-            GetDatastore(namespce).Create(value);
+            return GetDatastore(namespce).Create(value);
           }else{
-            GetDatastore(namespce).Update(value);
+            return GetDatastore(namespce).Update(value);
           }
         }
 

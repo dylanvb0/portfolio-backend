@@ -24,12 +24,14 @@ namespace portfolio_backend.Models
         }
 
         // [START create]
-        public void Create(T item)
+        public long Create(T item)
         {
-            var entity = item.ToEntity(null);
-            entity.Key = _db.CreateKeyFactory(_kind).CreateIncompleteKey();
+            KeyFactory factory = _db.CreateKeyFactory(_kind);
+            var entity = item.ToEntity(factory);
+            entity.Key = factory.CreateIncompleteKey();
             var keys = _db.Insert(new[] { entity });
             item.Id = keys.First().Path.First().Id;
+            return item.Id;
         }
         // [END create]
 
@@ -53,9 +55,10 @@ namespace portfolio_backend.Models
             return result != null ? ToObject(result) : null;
         }
 
-        public void Update(T item)
+        public long Update(T item)
         {
             _db.Update(item.ToEntity(_db.CreateKeyFactory(_kind)));
+            return item.Id;
         }
          public T ToObject(Entity entity)
          {

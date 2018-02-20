@@ -26,17 +26,17 @@ namespace portfolio_backend.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Admin value)
+        public long Post([FromBody]Admin value)
         {
-            GetDatastore().Create(value);
+            return GetDatastore().Create(value);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(long id, [FromBody]Admin value)
+        public long Put(long id, [FromBody]Admin value)
         {
           value.Id = id;
-          GetDatastore().Update(value);
+          return GetDatastore().Update(value);
         }
 
         // DELETE api/values/5
