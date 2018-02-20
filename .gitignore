@@ -1,5 +1,9 @@
 # Ignore all binaries and non-source
+bin/**
 bin
-obj
 obj/**
+obj
 wwwroot
+
+*.dll
+*.pdb
