@@ -9,6 +9,6 @@ namespace portfolio_backend.Models
     [Key]
     [JsonProperty("id")]
     public long Id { get; set; }
-    public abstract Entity ToEntity();
+    public abstract Entity ToEntity(KeyFactory factory);
   }
 }

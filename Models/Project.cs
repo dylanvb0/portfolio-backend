@@ -56,13 +56,13 @@ namespace portfolio_backend.Models {
     [JsonProperty("year")]
     public int Year { get; set; }
 
-    public override Entity ToEntity() => new Entity()
+    public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
-      Key = GetKey(),
+      Key = GetKey(factory),
       ["name"] = Name,
       ["description"] = Description,
       ["demo_link"] = DemoLink,
-      ["hidden_sections"] = (Entity[])HiddenSections.Select(section => section.ToEntity()).ToArray(),
+      ["hidden_sections"] = (Entity[])HiddenSections.Select(section => section.ToEntity(null)).ToArray(),
       ["marketing_url"] = MarketingUrl,
       ["pictures"] = (Value[])Pictures.Select( picture => ToPicValue(picture)).ToArray(),
       ["season"] = Season,
@@ -71,8 +71,8 @@ namespace portfolio_backend.Models {
       ["year"] = Year
     };
 
-    public Key GetKey() {
-      return new Key().WithElement("Project", Id);
+    public Key GetKey(KeyFactory factory) {
+      return factory.CreateKey(Id);
     }
 
     public Value ToPicValue(string picture){

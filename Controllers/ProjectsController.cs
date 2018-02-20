@@ -29,7 +29,6 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public void Post(string namespce, [FromBody]Project value)
         {
-          Console.WriteLine(value.ToEntity()["name"]);
           if(value.Id <= 0){
             GetDatastore(namespce).Create(value);
           }else{

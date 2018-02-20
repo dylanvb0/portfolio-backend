@@ -42,9 +42,9 @@ namespace portfolio_backend.Models {
     [JsonProperty("domain")]
     public string Domain { get; set; }
 
-    public override Entity ToEntity() => new Entity()
+    public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
-      Key = GetKey(),
+      Key = GetKey(factory),
       ["Name"] = Name,
       ["Email"] = Email,
       ["Password"] = Password,
@@ -52,8 +52,8 @@ namespace portfolio_backend.Models {
       ["Domain"] = Domain
     };
 
-    public Key GetKey() {
-      return new Key().WithElement("Client", Id);
+    public Key GetKey(KeyFactory factory) {
+      return factory.CreateKey(Id);
     }
   }
 }

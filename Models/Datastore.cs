@@ -26,7 +26,7 @@ namespace portfolio_backend.Models
         // [START create]
         public void Create(T item)
         {
-            var entity = item.ToEntity();
+            var entity = item.ToEntity(null);
             entity.Key = _db.CreateKeyFactory(_kind).CreateIncompleteKey();
             var keys = _db.Insert(new[] { entity });
             item.Id = keys.First().Path.First().Id;
@@ -55,14 +55,14 @@ namespace portfolio_backend.Models
 
         public void Update(T item)
         {
-            _db.Upsert(item.ToEntity());
+            _db.Update(item.ToEntity(_db.CreateKeyFactory(_kind)));
         }
          public T ToObject(Entity entity)
          {
            return (T)Activator.CreateInstance(typeof(T), entity);
          }
         public Key ToKey (long id){
-          return new Key().WithElement(_kind, id);
+          return _db.CreateKeyFactory(_kind).CreateKey(id);
         }
     }
 }

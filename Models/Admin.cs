@@ -26,16 +26,16 @@ namespace portfolio_backend.Models {
     [JsonProperty("password")]
     public string Password { get; set; }
 
-    public override Entity ToEntity() => new Entity()
+    public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
-      Key = GetKey(),
+      Key = GetKey(factory),
       ["Name"] = Name,
       ["Email"] = Email,
       ["Password"] = Password
     };
 
-    public Key GetKey() {
-      return new Key().WithElement("Admin", Id);
+    public Key GetKey(KeyFactory factory) {
+      return factory.CreateKey(Id);
     }
   }
 

@@ -24,7 +24,7 @@ namespace portfolio_backend.Models {
     [JsonProperty("text")]
     public string Text { get; set; }
 
-    public override Entity ToEntity() => new Entity()
+    public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
       Key = GetKey(),
       ["title"] = Title,
