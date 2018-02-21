@@ -11,19 +11,13 @@ namespace portfolio_backend.Controllers
     [Route("api/[controller]")]
     public class ClientsController : Controller
     {
-        // GET api/values
-        [HttpGet]
-        public IEnumerable<Client> Get()
-        {
-            return GetDatastore().List();
-        }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public Client Get(long id)
-        {
-            return GetDatastore().Read(id);
-        }
+        // [HttpGet("{id}")]
+        // public Client Get(long id)
+        // {
+        //     return GetDatastore().Read(id);
+        // }
 
         // GET api/values/5
         [HttpGet("{domain}")]
@@ -36,6 +30,25 @@ namespace portfolio_backend.Controllers
               }
             }
             return null;
+        }
+
+        [HttpGet("{email}/{password}")]
+        public Client Get(string email, string password)
+        {
+            var clients = GetDatastore().List();
+            foreach(Client client in clients){
+              if(email == client.Email && password == client.Password){
+                return client;
+              }
+            }
+            return null;
+        }
+
+        // GET api/values
+        [HttpGet]
+        public IEnumerable<Client> Get()
+        {
+            return GetDatastore().List();
         }
 
         // POST api/values
