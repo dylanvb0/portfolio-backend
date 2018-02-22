@@ -9,13 +9,6 @@ namespace portfolio_backend.Models {
   public class Client : DSObject {
     public Client(){
     }
-    public Client(long Id, string Name, string Email, string Password, string Namespace){
-      this.Name = Name;
-      this.Email = Email;
-      this.Password = Password;
-      this.Namespace = Namespace;
-      this.Domain = Domain;
-    }
     public Client(Entity entity){
       Id = entity.Key.Path.First().Id;
       Name = (string)entity["Name"];
@@ -23,6 +16,11 @@ namespace portfolio_backend.Models {
       Password = (string)entity["Password"];
       Namespace = (string)entity["Namespace"];
       Domain = (string)entity["Domain"];
+      SessionToken = (string)entity["session_token"];
+      string expiration = (string)entity["token_expiration"];
+      if(expiration != null){
+        TokenExpiration = DateTime.Parse((string)entity["token_expiration"]);
+      }
     }
 
 
@@ -42,6 +40,12 @@ namespace portfolio_backend.Models {
     [JsonProperty("domain")]
     public string Domain { get; set; }
 
+    [JsonProperty("session_token")]
+    public string SessionToken { get; set; }
+
+    [JsonProperty("token_expiration")]
+    public DateTime TokenExpiration { get; set; }
+
     public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
       Key = GetKey(factory),
@@ -49,7 +53,9 @@ namespace portfolio_backend.Models {
       ["Email"] = Email,
       ["Password"] = Password,
       ["Namespace"] = Namespace,
-      ["Domain"] = Domain
+      ["Domain"] = Domain,
+      ["sessionToken"] = SessionToken,
+      ["token_expiration"] = TokenExpiration.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'")
     };
 
     public Key GetKey(KeyFactory factory) {

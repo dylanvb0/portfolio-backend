@@ -1,4 +1,5 @@
 ﻿using System;
+﻿using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,8 +37,14 @@ namespace portfolio_backend.Controllers
         public Client Get(string email, string password)
         {
             var clients = GetDatastore().List();
+            email = Base64Decode(email);
+            password = Base64Decode(password);
             foreach(Client client in clients){
-              if(email == client.Email && password == client.Password){
+              if(email == client.Email && BCrypt.CheckPassword(password + "$O*#La", client.Password){
+                client.SessionToken = SecureRandomString();
+                client.TokenExpiration = DateTime.Now.ToUniversalTime().AddMinutes(30);
+                GetDatastore().Update(client);
+                client.Password = null;
                 return client;
               }
             }
@@ -55,6 +62,9 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public long Post([FromBody]Client value)
         {
+            string pwdToHash = value.Password + "$O*#La"; // Hardcoded salt
+            string hashToStoreInDatabase = BCrypt.HashPassword(pwdToHash, BCrypt.GenerateSalt());
+            value.Password = hashToStoreInDatabase;
             return GetDatastore().Create(value);
         }
 
@@ -84,6 +94,24 @@ namespace portfolio_backend.Controllers
         private Datastore<Client> GetDatastore(){
           return new Datastore<Client>("Client", "");
         }
+
+        private string Base64Encode(string plainText){
+          var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+          return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        private string Base64Decode(string base64EncodedData) {
+          var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+          return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
+        private string SecureRandomString(){
+            RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+            var byteArray = new byte[45];
+            provider.GetBytes(byteArray);
+            return Base64Encode(BitConverter.ToString(byteArray));
+        }
+
 
     }
 }
