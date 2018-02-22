@@ -40,7 +40,7 @@ namespace portfolio_backend.Controllers
             email = Base64Decode(email);
             password = Base64Decode(password);
             foreach(Client client in clients){
-              if(email == client.Email && BCrypt.CheckPassword(password + "$O*#La", client.Password){
+              if(email == client.Email && BCrypt.CheckPassword(password + "$O*#La", client.Password)){
                 client.SessionToken = SecureRandomString();
                 client.TokenExpiration = DateTime.Now.ToUniversalTime().AddMinutes(30);
                 GetDatastore().Update(client);
