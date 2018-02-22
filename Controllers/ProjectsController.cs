@@ -21,6 +21,11 @@ namespace portfolio_backend.Controllers
         [HttpGet()]
         public IEnumerable<Project> Get(string namespce)
         {
+            if(Authorized(namespce)){
+              Console.WriteLine("authorized");
+            }else{
+              Console.WriteLine("denied");
+            }
             return GetDatastore(namespce).List();
         }
 
@@ -29,6 +34,7 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public long Post(string namespce, [FromBody]Project value)
         {
+          if(!Authorized(namespce)) return -1;
           if(value.Id <= 0){
             return GetDatastore(namespce).Create(value);
           }else{
@@ -61,6 +67,35 @@ namespace portfolio_backend.Controllers
 
         private Datastore<Project> GetDatastore(string namespce = "dylanvb"){
           return new Datastore<Project>("Project", namespce);
+        }
+
+        private bool Authorized(string namespce){
+          string authHeader = Request.Headers["Authorization"];
+          if(authHeader != null && authHeader.StartsWith("Bearer")){
+            string token = authHeader.Substring("Bearer ".Length).Trim();
+            token = StaticMethods.Base64Decode(token);
+            Console.WriteLine(token);
+            var clients = ClientsController.GetDatastore().List();
+            Client client = null;
+            foreach(Client c in clients){
+              if(namespce == c.Namespace){
+                client = c;
+              }
+            }
+            Console.WriteLine(client);
+            if(client == null) return false;
+            Console.WriteLine(client.SessionToken);
+            Console.WriteLine(StaticMethods.Base64Decode(client.SessionToken));
+            if(StaticMethods.Base64Decode(client.SessionToken) == token &&
+               client.TokenExpiration.ToUniversalTime() > DateTime.Now.ToUniversalTime()){
+                  client.TokenExpiration = DateTime.Now.ToUniversalTime().AddMinutes(30);
+                  ClientsController.GetDatastore().Update(client);
+                  return true;
+            }
+            return false;
+          }else{
+            return false;
+          }
         }
 
     }

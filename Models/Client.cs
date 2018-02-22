@@ -54,7 +54,7 @@ namespace portfolio_backend.Models {
       ["Password"] = Password,
       ["Namespace"] = Namespace,
       ["Domain"] = Domain,
-      ["sessionToken"] = SessionToken,
+      ["session_token"] = SessionToken,
       ["token_expiration"] = TokenExpiration.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'")
     };
 

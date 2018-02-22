@@ -91,7 +91,7 @@ namespace portfolio_backend.Controllers
         public void OptionsParam(int id){
         }
 
-        private Datastore<Client> GetDatastore(){
+        public static Datastore<Client> GetDatastore(){
           return new Datastore<Client>("Client", "");
         }
 
