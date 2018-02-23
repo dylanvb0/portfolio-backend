@@ -58,8 +58,8 @@ namespace portfolio_backend.Controllers
         public void Options(){
         }
 
-        [HttpOptions("{id}")]
-        public void OptionsParam(int id){
+        [HttpOptions("{placeholder}")]
+        public void OptionsParam(string placeholder){
         }
 
         private Datastore<Project> GetDatastore(string namespce = "dylanvb"){

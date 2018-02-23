@@ -87,8 +87,12 @@ namespace portfolio_backend.Controllers
         public void Options(){
         }
 
-        [HttpOptions("{id}")]
-        public void OptionsParam(int id){
+        [HttpOptions("{placeholder}")]
+        public void OptionsParam(string placeholder){
+        }
+
+        [HttpOptions("{placeholder}/{placeholder2}")]
+        public void OptionsParam(string placeholder, string placeholder2){
         }
 
         public static Datastore<Client> GetDatastore(){
