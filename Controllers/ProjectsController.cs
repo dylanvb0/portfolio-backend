@@ -21,11 +21,6 @@ namespace portfolio_backend.Controllers
         [HttpGet()]
         public IEnumerable<Project> Get(string namespce)
         {
-            if(Authorized(namespce)){
-              Console.WriteLine("authorized");
-            }else{
-              Console.WriteLine("denied");
-            }
             return GetDatastore(namespce).List();
         }
 
@@ -46,6 +41,7 @@ namespace portfolio_backend.Controllers
         [HttpPut("{id}")]
         public void Put(string namespce, long id, [FromBody]Project value)
         {
+          if(!Authorized(namespce)) return;
           value.Id = id;
           GetDatastore(namespce).Update(value);
         }
@@ -54,6 +50,7 @@ namespace portfolio_backend.Controllers
         [HttpDelete("{id}")]
         public void Delete(string namespce, long id)
         {
+          if(!Authorized(namespce)) return;
           GetDatastore(namespce).Delete(id);
         }
 
@@ -70,32 +67,11 @@ namespace portfolio_backend.Controllers
         }
 
         private bool Authorized(string namespce){
-          string authHeader = Request.Headers["Authorization"];
-          if(authHeader != null && authHeader.StartsWith("Bearer")){
-            string token = authHeader.Substring("Bearer ".Length).Trim();
-            token = StaticMethods.Base64Decode(token);
-            Console.WriteLine(token);
-            var clients = ClientsController.GetDatastore().List();
-            Client client = null;
-            foreach(Client c in clients){
-              if(namespce == c.Namespace){
-                client = c;
-              }
-            }
-            Console.WriteLine(client);
-            if(client == null) return false;
-            Console.WriteLine(client.SessionToken);
-            Console.WriteLine(StaticMethods.Base64Decode(client.SessionToken));
-            if(StaticMethods.Base64Decode(client.SessionToken) == token &&
-               client.TokenExpiration.ToUniversalTime() > DateTime.Now.ToUniversalTime()){
-                  client.TokenExpiration = DateTime.Now.ToUniversalTime().AddMinutes(30);
-                  ClientsController.GetDatastore().Update(client);
-                  return true;
-            }
+          if(!StaticMethods.ClientAuthorized(namespce, Request.Headers["Authorization"])){
+            Response.StatusCode = 401;
             return false;
-          }else{
-            return false;
-          }
+          };
+          return true;
         }
 
     }
