@@ -19,7 +19,7 @@ namespace portfolio_backend.Models {
       TextSize = obj.text_size;
     }
 
-    [JsonProperty("text")]
+    [JsonProperty("list_items")]
     public IEnumerable<string> ListItems { get; set; }
 
     [JsonProperty("text_size")]
