@@ -12,6 +12,7 @@ namespace portfolio_backend.Models {
     }
     public About(Entity entity){
       Id = entity.Key.Path.First().Id;
+      Overview = (string)entity["overview"];
       Text = (string)entity["text"];
       Pictures = (string[])entity["pictures"];
       Email = (string)entity["email"];
@@ -23,6 +24,9 @@ namespace portfolio_backend.Models {
     [Required]
     [JsonProperty("text")]
     public string Text { get; set; }
+
+    [JsonProperty("overview")]
+    public string Overview { get; set; }
 
     [JsonProperty("pictures")]
     public IEnumerable<string> Pictures { get; set; }
@@ -42,7 +46,8 @@ namespace portfolio_backend.Models {
     public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
       Key = GetKey(factory),
-      ["text"] = Text,
+      ["text"] = ToTextValue(Text),
+      ["overview"] = Overview,
       ["pictures"] = (Value[])(Pictures ?? Enumerable.Empty<string>()).Select( picture => ToPicValue(picture)).ToArray(),
       ["email"] = Email,
       ["linkedin"] = LinkedIn,
@@ -57,6 +62,13 @@ namespace portfolio_backend.Models {
     public Value ToPicValue(string picture){
       return new Value(){
         StringValue = picture
+      };
+    }
+
+    public Value ToTextValue(string text){
+      return new Value(){
+        StringValue = text,
+        ExcludeFromIndexes = true
       };
     }
   }
