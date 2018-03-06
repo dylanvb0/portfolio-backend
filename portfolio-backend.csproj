@@ -13,7 +13,15 @@
     <PackageReference Include="Google.Cloud.Datastore.V1" Version="1.0.0.0" />
     <PackageReference Include="Google.Protobuf" Version="3.2.0.0"/>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.1"/>
+    <Reference Include="System.Web"/>
+    <!-- <Reference Include="System.Web.Http" /> -->
+    <!-- <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"/> -->
+    <!-- <Reference Include="System.Web.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference> -->
   </ItemGroup>
+
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
