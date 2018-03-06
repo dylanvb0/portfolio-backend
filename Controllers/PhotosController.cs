@@ -26,6 +26,7 @@ namespace portfolio_backend.Controllers
         [HttpGet()]
         public IEnumerable<string> Get(string namespce)
         {
+            return new string[1]{_hostingEnvironment.WebRootPath};
             var uploads = Path.Combine(_hostingEnvironment.WebRootPath, namespce);
             var images = Path.Combine(uploads, "images");
             DirectoryInfo directory = new DirectoryInfo(images);
@@ -37,7 +38,7 @@ namespace portfolio_backend.Controllers
         [HttpPost]
         public async Task<long> Post(string namespce)
         {
-          if(!Authorized(namespce)) return;
+          if(!Authorized(namespce)) return -1;
           var file = Request.Form.Files[0];
           var uploads = Path.Combine(_hostingEnvironment.WebRootPath, namespce);
           var images = Path.Combine(uploads, "images");

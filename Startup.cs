@@ -33,6 +33,8 @@ namespace portfolio_backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }else{
+                env.WebRootPath = "/var/www/dylanvb.me/public/api/wwwroot";
             }
             app.UseMvc();
         }
