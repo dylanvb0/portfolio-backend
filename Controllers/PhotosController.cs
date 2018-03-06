@@ -26,7 +26,6 @@ namespace portfolio_backend.Controllers
         [HttpGet()]
         public IEnumerable<string> Get(string namespce)
         {
-            return new string[1]{_hostingEnvironment.WebRootPath};
             var uploads = Path.Combine(_hostingEnvironment.WebRootPath, namespce);
             var images = Path.Combine(uploads, "images");
             DirectoryInfo directory = new DirectoryInfo(images);
