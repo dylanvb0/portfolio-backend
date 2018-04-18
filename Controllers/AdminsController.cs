@@ -27,7 +27,7 @@ namespace portfolio_backend.Controllers
             foreach(Admin admin in admins){
               if(email == admin.Email && BCrypt.CheckPassword(password + "$O*#La", admin.Password)){
                 admin.SessionToken = StaticMethods.SecureRandomString();
-                admin.TokenExpiration = DateTime.Now.ToUniversalTime();
+                admin.TokenExpiration = DateTime.Now.ToUniversalTime().AddMinutes(30);
                 GetDatastore().Update(admin);
                 admin.Password = null;
                 return admin;
