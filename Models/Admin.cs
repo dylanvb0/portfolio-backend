@@ -14,6 +14,11 @@ namespace portfolio_backend.Models {
       Name = (string)entity["Name"];
       Email = (string)entity["Email"];
       Password = (string)entity["Password"];
+      SessionToken = (string)entity["session_token"];
+      string expiration = (string)entity["token_expiration"];
+      if(expiration != null){
+        TokenExpiration = DateTime.Parse((string)entity["token_expiration"]);
+      }
     }
 
     [Required]
@@ -26,12 +31,20 @@ namespace portfolio_backend.Models {
     [JsonProperty("password")]
     public string Password { get; set; }
 
+    [JsonProperty("session_token")]
+    public string SessionToken { get; set; }
+
+    [JsonProperty("token_expiration")]
+    public DateTime TokenExpiration { get; set; }
+
     public override Entity ToEntity(KeyFactory factory) => new Entity()
     {
       Key = GetKey(factory),
       ["Name"] = Name,
       ["Email"] = Email,
-      ["Password"] = Password
+      ["Password"] = Password,
+      ["session_token"] = SessionToken,
+      ["token_expiration"] = TokenExpiration.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'")
     };
 
     public Key GetKey(KeyFactory factory) {

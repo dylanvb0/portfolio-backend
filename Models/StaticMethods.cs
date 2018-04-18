@@ -45,5 +45,29 @@ namespace portfolio_backend.Models {
         return false;
       }
     }
+
+    public static bool AdminAuthorized(string email, string authHeader){
+      if(authHeader != null && authHeader.StartsWith("Bearer")){
+        string token = authHeader.Substring("Bearer ".Length).Trim();
+        token = StaticMethods.Base64Decode(token);
+        var admins = AdminsController.GetDatastore().List();
+        Admin admin = null;
+        foreach(Admin a in admins){
+          if(email == a.Email){
+            admin = a;
+          }
+        }
+        if(admin == null) return false;
+        if(StaticMethods.Base64Decode(admin.SessionToken) == token &&
+           admin.TokenExpiration.ToUniversalTime() > DateTime.Now.ToUniversalTime()){
+              admin.TokenExpiration = DateTime.Now.ToUniversalTime().AddMinutes(30);
+              AdminsController.GetDatastore().Update(admin);
+              return true;
+        }
+        return false;
+      }else{
+        return false;
+      }
+    }
   }
 }

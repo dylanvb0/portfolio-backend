@@ -18,16 +18,31 @@ namespace portfolio_backend.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public Admin Get(long id)
+        [HttpGet("{email}/{password}")]
+        public Admin Get(string email, string password)
         {
-            return GetDatastore().Read(id);
+            var admins = GetDatastore().List();
+            email = StaticMethods.Base64Decode(email);
+            password = StaticMethods.Base64Decode(password);
+            foreach(Admin admin in admins){
+              if(email == admin.Email && BCrypt.CheckPassword(password + "$O*#La", admin.Password)){
+                admin.SessionToken = StaticMethods.SecureRandomString();
+                admin.TokenExpiration = DateTime.Now.ToUniversalTime();
+                GetDatastore().Update(admin);
+                admin.Password = null;
+                return admin;
+              }
+            }
+            return null;
         }
 
         // POST api/values
         [HttpPost]
         public long Post([FromBody]Admin value)
         {
+            string pwdToHash = value.Password + "$O*#La";
+            string hashToStoreInDatabase = BCrypt.HashPassword(pwdToHash, BCrypt.GenerateSalt());
+            value.Password = hashToStoreInDatabase;
             return GetDatastore().Create(value);
         }
 
@@ -54,9 +69,12 @@ namespace portfolio_backend.Controllers
         public void OptionsParam(int id){
         }
 
-        private Datastore<Admin> GetDatastore(){
-          return new Datastore<Admin>("Admin", "");
+        [HttpOptions("{placeholder}/{placeholder2}")]
+        public void OptionsParam(string placeholder, string placeholder2){
         }
 
+        public static Datastore<Admin> GetDatastore(){
+          return new Datastore<Admin>("Admin", "");
+        }
     }
 }

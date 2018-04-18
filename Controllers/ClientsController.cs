@@ -73,6 +73,7 @@ namespace portfolio_backend.Controllers
         public long Put(long id, [FromBody]Client value)
         {
           value.Id = id;
+          value.Password = GetDatastore().Read(id).Password;
           return GetDatastore().Update(value);
         }
 
