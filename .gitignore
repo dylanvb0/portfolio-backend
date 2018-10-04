@@ -8,3 +8,5 @@ wwwroot
 *.dll
 *.pdb
 service-account.json
+
+*.deb
